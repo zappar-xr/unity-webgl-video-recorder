@@ -1,0 +1,29 @@
+{
+    "name": "com.zappar.videorecorder",
+  "version": "0.1.0",
+    "displayName": "WebGL Video Recorder",
+    "description": "Record MP4 videos of HTML canvas elements, including those with WebGL contexts",
+    "documentationUrl" : "https://docs.zap.works/universal-ar/useful-packages/video-recorder/",
+    "unity": "2021.2",
+    "unityRelease": "11f1",
+    "dependencies": {
+    },
+    "samples": [
+        {
+            "displayName": "Examples",
+            "description": "Video record webgl",
+            "path": "Samples~/Examples"
+        }
+    ],
+   "keywords": [
+      "Video",
+      "Recording",
+      "WebGL",
+      "Zappar",
+      "UAR"
+    ],
+    "author": {
+      "name": "Zappar",
+      "email": "shubham@zappar.com"
+    }
+}
