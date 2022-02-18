@@ -14,9 +14,9 @@ mergeInto(LibraryManager.library, {
        this.recordingInProgress = false;
        if (typeof ZapparVideoRecorder === 'undefined' || ZapparVideoRecorder === null) {
             var scr = document.createElement("script");
-            scr.src="https://libs.zappar.com/zappar-videorecorder/0.1.17/zappar-videorecorder.js";
+            scr.src="https://libs.zappar.com/zappar-videorecorder/0.1.22/zappar-videorecorder.js";
             scr.addEventListener('load', function() {
-                console.log("ZapparVideoRecorder version 0.1.17 created");
+                console.log("ZapparVideoRecorder version 0.1.22 created");
                 ZapparVideoRecorder.createCanvasVideoRecorder(canva, {
                     autoFrameUpdate: true,
                     audio: false,
