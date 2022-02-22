@@ -35,12 +35,37 @@ This library is currently supported only on Unity WebGL with the Unity version o
 2. Next you would want to subscribe for OnRecordingFinished event from the native plugin. The `ZVideoRecorder.RegisterOnRecordingFinished(...)` allows you to register your callback methods. Depending upon the unity canvas resolution and duration it might take some time for the plugin to process the video output after you've called to stop the video recording.
 3. Call `ZVideoRecorder.DeregisterOnRecordingFinished(...)` to unsubscribe from the plugin event at the end.
 4. Call `ZVideoRecorder.StartRecording()` and `ZVideoRecorder.StopRecording()` to start/stop the recording process.
+5. Remeber to update the webgl template or final index.html to define `uarGameInstance`. Read [Updates to WebGL Template](#updates-to-webgl-template) section for details.
 
 The package includes two example scenes to demonstrate the usage of the plugin. The `VideoRecorderSample.scene` uses a direct browser prompt to save the video recording at the end of processing, While the `VideoRecorderPromptSample.scene` uses the [com.zappar.sns](https://github.com/zappar-xr/unity-webgl-sns) package to open web prompt to check the recording and then either save or share it. Look for the `ZVidTest.cs` and `ZVidPromptTest.cs` scripts to understand the flow.
 
 
 > **Note**: Make sure to uncomment all the lines containing `Zappar.Additional.SNS.ZSaveNShare` in `ZVidPromptTest.cs` when using VideoRecording package along with the SNS package, to allow calling the SNS APIs.
 
+
+## Updates to WebGL Template
+
+Lastly, to allow the plugin to send messages and events to the Unity game instance you would need to define uarGameInstance in the global window scope. Add the following line in the promise resolution state of the **createUnityInstance** method
+
+`window.uarGameInstance=unityInstance;`
+
+For example, in the default Unity WebGL template find the section where createUnityInstance method is called, and add this line inside the `.then((unityInstance)=> { ... })` block as follows:
+
+```
+createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+          window.uarGameInstance=unityInstance;
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+        }).catch((message) => {
+          alert(message);
+        });
+```
+
+You can define this inside your own WebGL Template or in the final `index.html` after the build.
 
 ## Patents and Licenses
 

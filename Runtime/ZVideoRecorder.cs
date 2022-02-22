@@ -63,7 +63,11 @@ namespace Zappar.Additional.VideoRecorder
             if(!zappar_video_recorder_initialize("#canvas", ZWebListener.UnityObjectName, nameof(ZVideoRecordListener.RecordingFinishedCallback)))
 #endif
             {
+#if UNITY_EDITOR
+                Debug.Log("ZVideoRecorder is not supported in editor mode.");
+#else
                 Debug.Log("Failed to initialize video recorder");
+#endif
                 return;
             }
         }
@@ -80,7 +84,7 @@ namespace Zappar.Additional.VideoRecorder
         /// <returns></returns>
         public static bool StartRecording(bool autoSavePrompt=true)
         {
-            if (!zappar_video_recorder_is_initialized()) { Debug.Log("recording not started; not init"); return false; }
+            if (!zappar_video_recorder_is_initialized()) { Debug.Log("Recording not started; Video recorder not initialized."); return false; }
 
             if (!zappar_video_recorder_start(autoSavePrompt))
             {
