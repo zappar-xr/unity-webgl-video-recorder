@@ -3,14 +3,19 @@ using Zappar.Additional.VideoRecorder;
 
 public class ZVidTest : MonoBehaviour
 {
+    public ZVideoConfig VidConfig;
+    public GameObject VideoControls;
+
     private void Start()
     {
-        ZVideoRecorder.Initialize();
+        VideoControls?.SetActive(false);
+        ZVideoRecorder.RegisterVideoRecorderCallbacks(OnRecorderReady);
+        ZVideoRecorder.Initialize(VidConfig);
     }
 
     public void StartRecording()
     {
-        ZVideoRecorder.RegisterOnRecordingFinished(OnRecordingFinished);
+        ZVideoRecorder.RegisterVideoRecorderCallbacks(null, OnRecordingFinished);
         ZVideoRecorder.StartRecording();
     }
 
@@ -19,9 +24,16 @@ public class ZVidTest : MonoBehaviour
         ZVideoRecorder.StopRecording();
     }
 
+    public void OnRecorderReady(string message)
+    {
+        Debug.Log("Video recorder is ready");
+        VideoControls?.SetActive(true);
+        ZVideoRecorder.DeregisterVideoRecorderCallbacks(OnRecorderReady);
+    }
+
     public void OnRecordingFinished(string message)
     {
         Debug.Log("Finished video recording!");
-        ZVideoRecorder.DeregisterOnRecordingFinished(OnRecordingFinished);
+        ZVideoRecorder.DeregisterVideoRecorderCallbacks(null, OnRecordingFinished);
     }
 }

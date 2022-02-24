@@ -3,21 +3,25 @@ using Zappar.Additional.VideoRecorder;
 
 public class ZVidPromptTest : MonoBehaviour
 {
+    public ZVideoConfig VidConfig;
     [Tooltip("Use zappar save and share package to raise the prompt for video recording")]
-    public bool UseSNSMethodToSaveVideo = false;
+    public bool UseSNSPrompt = true;
+    public GameObject VideoControls;
 
     private void Start()
     {
+        VideoControls?.SetActive(false);
         Debug.Log("Uncomment all lines in this script containing references to ZSaveNShare to raise the save and share prompt");
+        ZVideoRecorder.RegisterVideoRecorderCallbacks(OnRecorderReady);
+        ZVideoRecorder.Initialize(VidConfig);
         //Zappar.Additional.SNS.ZSaveNShare.Initialize();
-        ZVideoRecorder.Initialize();
     }
 
     public void StartRecording()
     {
-        ZVideoRecorder.RegisterOnRecordingFinished(OnRecordingFinished);
+        ZVideoRecorder.RegisterVideoRecorderCallbacks(null, OnRecordingFinished);
         //Zappar.Additional.SNS.ZSaveNShare.RegisterSNSCallbacks(OnSaved, OnShared, OnPromptClosed);
-        ZVideoRecorder.StartRecording(!UseSNSMethodToSaveVideo);
+        ZVideoRecorder.StartRecording(!UseSNSPrompt);
     }
 
     public void StopRecording()
@@ -25,11 +29,18 @@ public class ZVidPromptTest : MonoBehaviour
         ZVideoRecorder.StopRecording();
     }
 
+    public void OnRecorderReady(string message)
+    {
+        Debug.Log("Video recorder is ready");
+        VideoControls?.SetActive(true);
+        ZVideoRecorder.DeregisterVideoRecorderCallbacks(OnRecorderReady);
+    }
+
     public void OnRecordingFinished(string message)
     {
         Debug.Log("Finished video recording! Calling SNS prompt");
-        ZVideoRecorder.DeregisterOnRecordingFinished(OnRecordingFinished);
-        if (UseSNSMethodToSaveVideo)
+        ZVideoRecorder.DeregisterVideoRecorderCallbacks(null, OnRecordingFinished);
+        if (UseSNSPrompt)
         {
             // if (Zappar.Additional.SNS.ZSaveNShare.IsInitialized())
             //     Zappar.Additional.SNS.ZSaveNShare.OpenSNSVideoRecordingPrompt();

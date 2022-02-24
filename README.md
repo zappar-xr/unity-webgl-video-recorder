@@ -31,13 +31,14 @@ This library is currently supported only on Unity WebGL with the Unity version o
 ## Usage
 
 `ZVideoRecorder.cs` is the main script that exposes all the required APIs and callbacks you need to use the package. The typical flow of operation is as follows:
-1. Call the `ZVideoRecorder.Initialize()` at the start of the scene. Normally you would call this from MonoBehaviours' `Awake` or `Start` method which will set up the library for use.
-2. Next you would want to subscribe for OnRecordingFinished event from the native plugin. The `ZVideoRecorder.RegisterOnRecordingFinished(...)` allows you to register your callback methods. Depending upon the unity canvas resolution and duration it might take some time for the plugin to process the video output after you've called to stop the video recording.
-3. Call `ZVideoRecorder.DeregisterOnRecordingFinished(...)` to unsubscribe from the plugin event at the end.
+1. Register for VideoRecorder callbacks by calling `ZVideoRecorder.RegisterVideoRecorderCallbacks`, expecially for `OnRecorderReady` event. It might take couple of seconds for video recording plugin to initialize on mobile browsers.
+2. Call the `ZVideoRecorder.Initialize(...)` with `ZVideoConfig` object which specifies the recorder properties. Normally you would call this from MonoBehaviours' `Awake` or `Start` method which will set up the library for use.
+3. If not done already, then you may want to subscribe for `OnRecordingFinished` using the same `ZVideoRecorder.RegisterVideoRecorderCallbacks` method. Depending upon the unity canvas resolution and duration it might take some time for the plugin to process the video output after you've called to stop the video recording.
 4. Call `ZVideoRecorder.StartRecording()` and `ZVideoRecorder.StopRecording()` to start/stop the recording process.
-5. Remeber to update the webgl template or final index.html to define `uarGameInstance`. Read [Updates to WebGL Template](#updates-to-webgl-template) section for details.
+5. Unsubscribe from the plugin events by calling `ZVideoRecorder.DeregisterOnRecordingFinished(...)` as per your convenience.
+6. Remeber to update your webgl template or final index.html to define `uarGameInstance`. Read [Updates to WebGL Template](#updates-to-webgl-template) section for details.
 
-The package includes two example scenes to demonstrate the usage of the plugin. The `VideoRecorderSample.scene` uses a direct browser prompt to save the video recording at the end of processing, While the `VideoRecorderPromptSample.scene` uses the [com.zappar.sns](https://github.com/zappar-xr/unity-webgl-sns) package to open web prompt to check the recording and then either save or share it. Look for the `ZVidTest.cs` and `ZVidPromptTest.cs` scripts to understand the flow.
+The package includes two example scenes to demonstrate the usage of the plugin. The `VideoRecorderSample.scene` uses the direct browser prompt to save the video recording at the end of processing, whereas the `VideoRecorderPromptSample.scene` uses the [com.zappar.sns](https://github.com/zappar-xr/unity-webgl-sns) package to open web prompt to check the recording and then either save or share it. Look for the `ZVidTest.cs` and `ZVidPromptTest.cs` scripts to understand the flow.
 
 
 > **Note**: Make sure to uncomment all the lines containing `Zappar.Additional.SNS.ZSaveNShare` in `ZVidPromptTest.cs` when using VideoRecording package along with the SNS package, to allow calling the SNS APIs.
